@@ -65,6 +65,11 @@ export interface NgbModalOptions {
   container?: string | HTMLElement;
 
   /**
+   * Selector of the area draggable (null by default).
+   */
+  draggableSelector?: string;
+
+  /**
    * The `Injector` to use for modal content.
    */
   injector?: Injector;
