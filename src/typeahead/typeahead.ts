@@ -109,6 +109,8 @@ export class NgbTypeahead implements ControlValueAccessor,
    */
   @Input() focusFirst: boolean;
 
+  @Input() closeOnSelect = true;
+
   /**
    * The function that converts an item from the result list to a `string` to display in the `<input>` field.
    *
@@ -301,7 +303,13 @@ export class NgbTypeahead implements ControlValueAccessor,
       const {windowRef} = this._popupService.open();
       this._windowRef = windowRef;
       this._windowRef.instance.id = this.popupId;
-      this._windowRef.instance.selectEvent.subscribe((result: any) => this._selectResultClosePopup(result));
+      this._windowRef.instance.selectEvent.subscribe((result: any) => {
+        if (this.closeOnSelect) {
+          this._selectResultClosePopup(result);
+        } else {
+          this._selectResult(result);
+        }
+      });
       this._windowRef.instance.activeChangeEvent.subscribe((activeId: string) => this.activeDescendant = activeId);
 
       if (this.container === 'body') {

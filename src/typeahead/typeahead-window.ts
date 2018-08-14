@@ -21,7 +21,7 @@ export interface ResultTemplateContext {
   selector: 'ngb-typeahead-window',
   exportAs: 'ngbTypeaheadWindow',
   encapsulation: ViewEncapsulation.None,
-  host: {'(mousedown)': '$event.preventDefault()', 'class': 'dropdown-menu show', 'role': 'listbox', '[id]': 'id'},
+  host: {'(mousedown)': '$event.preventDefault()', 'class': 'dropdown-menu show', 'role': 'listbox', '[id]': 'id', '(click)': 'onClick($event)'},
   template: `
     <ng-template #rt let-result="result" let-term="term" let-formatter="formatter">
       <ngb-highlight [result]="formatter(result)" [term]="term"></ngb-highlight>
@@ -79,6 +79,11 @@ export class NgbTypeaheadWindow implements OnInit {
   @Output('select') selectEvent = new EventEmitter();
 
   @Output('activeChange') activeChangeEvent = new EventEmitter();
+
+  onClick(event) {
+    // Clicks inside the typeahead-window should not bubble up to the document
+    event.stopPropagation();
+  }
 
   hasActive() { return this.activeIdx > -1 && this.activeIdx < this.results.length; }
 
