@@ -220,9 +220,12 @@ export class NgbModalWindow implements OnInit,
       modalDialog.style.marginRight = '0';
       this._posX = e.clientX;
       this._posY = e.clientY;
-      document.onmousemove = (event) => {
-        this.dragModal(event);
-      };
+      const maxMarginLeft = this._elRef.nativeElement.clientWidth - modalDialog.clientWidth;
+      this._zone.runOutsideAngular(() => {
+        document.onmousemove = (event) => {
+          this.dragModal(event, maxMarginLeft);
+        };
+      });
       document.onmouseup = () => {
         document.onmouseup = null;
         document.onmousemove = null;
@@ -232,30 +235,32 @@ export class NgbModalWindow implements OnInit,
     }
   }
 
-  private dragModal(e: MouseEvent) {
+  private dragModal(e: MouseEvent, maxMarginLeft) {
     const modalDialog: HTMLElement | null = this._elRef.nativeElement.querySelector('.modal-dialog');
     if (modalDialog) {
       const deltaX = this._posX - e.clientX;
       const deltaY = this._posY - e.clientY;
-      const top: number = parseInt(modalDialog.style.marginTop.split('px')[0], 10);
-      const left: number = parseInt(modalDialog.style.marginLeft.split('px')[0], 10);
       let marginTop = modalDialog.offsetTop - deltaY;
       let marginLeft = modalDialog.offsetLeft - deltaX;
       let marginBottom = window.innerHeight - modalDialog.offsetTop - modalDialog.offsetHeight + deltaY;
       let marginRight = window.innerWidth - modalDialog.offsetLeft - modalDialog.offsetWidth + deltaX;
       if (marginTop < 0) {
         marginTop = 0;
-      } else if (marginBottom < 0) {
+      } else if (marginBottom < 0 && window.innerHeight - modalDialog.offsetHeight >= 0) {
         marginTop = window.innerHeight - modalDialog.offsetHeight;
       } else {
         this._posY = e.clientY;
       }
       if (marginLeft < 0) {
         marginLeft = 0;
-      } else if (marginRight < 0) {
+      } else if (marginRight < 0 && window.innerWidth - modalDialog.offsetWidth >= 0) {
         marginLeft = window.innerWidth - modalDialog.offsetWidth;
       } else {
         this._posX = e.clientX;
+      }
+      if (marginLeft > maxMarginLeft) {
+        // don't resize when dragging to the right edge
+        marginLeft = maxMarginLeft;
       }
       modalDialog.style.marginTop = marginTop + 'px';
       modalDialog.style.marginLeft = marginLeft + 'px';
