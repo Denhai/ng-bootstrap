@@ -181,7 +181,7 @@ export class NgbModalWindow implements OnInit,
           this.startDrag(e);
         };
       } else {
-        console.warn(`Couldn't find draggableSelector (${this.draggableSelector})`)
+        console.warn(`Couldn't find draggableSelector (${this.draggableSelector})`);
       }
     }
   }
@@ -231,7 +231,7 @@ export class NgbModalWindow implements OnInit,
         document.onmousemove = null;
       };
     } else {
-      console.warn(`Couldn't find .modal-dialog element`)
+      console.warn(`Couldn't find .modal-dialog element`);
     }
   }
 
@@ -265,7 +265,7 @@ export class NgbModalWindow implements OnInit,
       modalDialog.style.marginTop = marginTop + 'px';
       modalDialog.style.marginLeft = marginLeft + 'px';
     } else {
-      console.warn(`Couldn't find .modal-dialog element`)
+      console.warn(`Couldn't find .modal-dialog element`);
     }
   }
 

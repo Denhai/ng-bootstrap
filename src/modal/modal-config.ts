@@ -129,7 +129,7 @@ export class NgbModalConfig implements Required<NgbModalOptions> {
   size: 'sm' | 'lg' | 'xl' | string;
   windowClass: string;
   backdropClass: string;
-  draggableSelector: string = undefined;
+  draggableSelector: string;
 
   constructor(ngbConfig: NgbConfig) { this.animation = ngbConfig.animation; }
 }
